@@ -1,0 +1,32 @@
+# Python files
+*.pyc
+__pycache__/
+
+# My secrets (environment variables)
+.env
+
+# Virtual reality
+env/
+venv/
+
+# All your data are belong to us
+*.sqlite3
+*.sql
+*.dump
+
+# Static and media files
+static/
+media/
+
+# Logs
+*.log
+
+# Other Stuff (IDE, OS, testing, etc.)
+.vscode/
+Thumbs.db
+.DS_Store
+htmlcov/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
