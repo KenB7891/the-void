@@ -13,11 +13,7 @@ venv/
 *.sqlite3
 *.sql
 *.dump
-void.db
-
-# Static and media files
-static/
-media/
+*.db
 
 # Logs
 *.log
