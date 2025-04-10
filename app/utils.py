@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from fastapi import Request
 from app.models import Message
 from sqlalchemy.orm import Session
@@ -15,6 +15,6 @@ def get_client_ip(request: Request) -> str:
     return request.client.host
 
 def is_ip_allowed(ip: str, db: Session) -> bool:
-    cooldown_cutoff_time = datetime.now(timezone.utc)
+    cooldown_cutoff_time = datetime.now(timezone.utc) - timedelta(hours=MESSAGE_COOLDOWN_HOURS)
     cooldown_message = db.query(Message).filter(Message.ip == ip, Message.created_at > cooldown_cutoff_time).first()
     return cooldown_message is None
