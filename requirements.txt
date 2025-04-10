@@ -23,3 +23,11 @@ watchfiles==0.24.0
 websockets==13.1
 MarkupSafe==2.1.5
 jinja2==3.1.6
+iniconfig==2.1.0
+packaging==24.2
+pluggy==1.5.0
+pytest==8.3.5
+tomli==2.2.1
+certifi==2025.1.31
+httpcore==1.0.7
+httpx==0.28.1
