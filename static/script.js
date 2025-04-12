@@ -1,3 +1,13 @@
+const textarea = document.getElementById('yell-message');
+const characterCount = document.getElementById('character-count');
+const maxYellLength = textarea.getAttribute('maxlength');
+
+textarea.addEventListener('input', () => {
+    const length = textarea.value.length;
+    characterCount.textContent = `${length} / ${maxYellLength}`;
+})
+
+
 const YELL_TIMEOUT = 30; // seconds
 const PEEK_TIMEOUT = 15; // seconds
 
@@ -29,10 +39,6 @@ function updatePeekTime() {
     localStorage.setItem('lastPeekTime', Math.floor(Date.now() / 1000));
 }
 
-document.getElementById('yell-btn').addEventListener('click', function() {
-    document.getElementById('yell-section').style.display = 'block';
-});
-
 document.getElementById('peek-btn').addEventListener('click', function() {
     
     if (!canPeek()) {
@@ -52,7 +58,7 @@ document.getElementById('peek-btn').addEventListener('click', function() {
         });
 });
 
-document.getElementById('send-yell').addEventListener('click', function() {
+document.getElementById('yell-btn').addEventListener('click', function() {
     const message = document.getElementById('yell-message').value;
 
     if (!canYell()) {
@@ -71,7 +77,6 @@ document.getElementById('send-yell').addEventListener('click', function() {
         .then(data => {
             alert(data.status);
             document.getElementById('yell-message').value = '';
-            document.getElementById('yell-section').style.display = 'none';
         })
         .catch(error => {
             alert('Error reaching The Void.');

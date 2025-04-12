@@ -10,6 +10,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 MAX_DISPLAYS = 10
+MAX_YELL_MESSAGE_LENGTH = 1000
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -36,11 +37,14 @@ async def yell(request: Request, body: dict, db: Session = Depends(get_db)):
     user_agent = request.headers.get('User-Agent', '').lower()
 
     if 'curl' in user_agent:
-        raise HTTPException(status_code=403, detail='Curl requests are not allowed.')
-    
+        raise HTTPException(status_code=403, detail='Curl requests are not allowed.')    
+       
     raw_message = body.get('message', '')
     if not raw_message.strip():
         raise HTTPException(status_code=400, detail='Nothing was added to The Void.')
+    
+    if len(raw_message) > MAX_YELL_MESSAGE_LENGTH:
+        raise HTTPException(status_code=400, detail="Message is too long, even for The Void.")
     
     clean_message = sanitize_input(raw_message)
     if not clean_message:
