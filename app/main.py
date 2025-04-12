@@ -5,12 +5,11 @@ from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from app.database import connect_db, get_db, disconnect_db
 from app.models import Message
-from app.utils import is_ip_allowed, sanitize_input, get_client_ip
+from app.utils import sanitize_input
 from sqlalchemy import func
 from sqlalchemy.orm import Session
-import random
-from datetime import datetime, timezone
 
+MAX_DISPLAYS = 10
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -39,12 +38,6 @@ async def yell(request: Request, body: dict, db: Session = Depends(get_db)):
     if 'curl' in user_agent:
         raise HTTPException(status_code=403, detail='Curl requests are not allowed.')
     
-    ip = get_client_ip(request)
-    print(ip)
-
-    if not is_ip_allowed(ip, db):
-        raise HTTPException(status_code=429, detail='Yelling into The Void is on cooldown!')
-    
     raw_message = body.get('message', '')
     if not raw_message.strip():
         raise HTTPException(status_code=400, detail='Nothing was added to The Void.')
@@ -53,7 +46,7 @@ async def yell(request: Request, body: dict, db: Session = Depends(get_db)):
     if not clean_message:
         raise HTTPException(status_code=400, detail='Nothing was added to The Void.')
 
-    final_msg = Message(content=clean_message, ip=ip, created_at=datetime.now(timezone.utc))
+    final_msg = Message(content=clean_message, total_displays=0)
     db.add(final_msg)
     db.commit()
 
@@ -66,7 +59,11 @@ async def peek(db: Session = Depends(get_db)):
     if not message:
         raise HTTPException(status_code=404, detail='The Void is empty.')
 
-    db.delete(message)
-    db.commit()
+    if message.total_displays >= MAX_DISPLAYS:
+        db.delete(message)
+        db.commit()
+    else:
+        message.total_displays += 1
+        db.commit()
 
     return {'message': message.content}

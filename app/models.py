@@ -7,5 +7,4 @@ class Message(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     content = Column(String)
-    ip = Column(String)
-    created_at = Column(DateTime)
+    total_displays = Column(Integer)
