@@ -11,6 +11,8 @@ on:
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: .
 
     steps:
       - name: Checkout The Code
