@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: .
+      ENVIRONMENT: TEST
 
     steps:
       - name: Checkout The Code
